@@ -91,7 +91,11 @@ GetCategory()
 def MatchDetailData(url):
     # Tìm element và bấm
     driver = webdriver.Chrome()
-    driver.maximize_window()
+    # Đặt kích thước của cửa sổ trình duyệt
+    driver.set_window_size(400, 300)
+
+    # Đặt vị trí của cửa sổ trình duyệt
+    driver.set_window_position(0, 0)
     driver.get(url)
 
     # Đợi cho element của cookie xuất hiện và click vào nút accept
@@ -108,7 +112,7 @@ def MatchDetailData(url):
     li_element = driver.find_element(By.CSS_SELECTOR,"li[data-tab-index='2']")
     li_element.click()
 
-    time.sleep(1)
+    time.sleep(2)
     soup = BeautifulSoup(driver.page_source, 'html.parser')
     tbody = soup.find('tbody', {'class': 'matchCentreStatsContainer'})
     p_children = tbody.find_all('p')
