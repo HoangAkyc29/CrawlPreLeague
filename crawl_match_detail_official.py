@@ -50,10 +50,11 @@ def GetCategory():
         # Nếu không tìm thấy element của cookie hoặc không thể click được, bỏ qua
         pass
 
-    time.sleep(2)
+    time.sleep(1)
     li_element = driver.find_element(By.CSS_SELECTOR, "li[data-tab-index='2']")
     li_element.click()
 
+    time.sleep(1)
     soup = BeautifulSoup(driver.page_source, 'html.parser')
     tbody = soup.find('tbody', {'class': 'matchCentreStatsContainer'})
     p_children = tbody.find_all('p')
@@ -103,10 +104,11 @@ def MatchDetailData(url):
         # Nếu không tìm thấy element của cookie hoặc không thể click được, bỏ qua
         pass
 
-    time.sleep(2)
+    time.sleep(1)
     li_element = driver.find_element(By.CSS_SELECTOR,"li[data-tab-index='2']")
     li_element.click()
 
+    time.sleep(1)
     soup = BeautifulSoup(driver.page_source, 'html.parser')
     tbody = soup.find('tbody', {'class': 'matchCentreStatsContainer'})
     p_children = tbody.find_all('p')
@@ -122,9 +124,9 @@ def MatchDetailData(url):
     #list2 = [matchdata[i] for i in range(len(matchdata)) if i % 3 == 1]
     list3 = [matchdata[i] for i in range(len(matchdata)) if i % 3 == 2]
 
-    print(list1)
+    #print(list1)
     #print(list2)
-    print(list3)
+    #print(list3)
 
     #-----------------------------------------------------------------------------------------
 
@@ -132,7 +134,7 @@ def MatchDetailData(url):
 
     score_text = resultdiv.text.strip()  # lấy nội dung của thẻ div và xóa các ký tự trắng ở đầu và cuối
     scores = re.findall('\d+', score_text)  # sử dụng regular expression để tìm các giá trị số trong nội dung
-    print(scores)
+    #print(scores)
     list1.insert(0,scores[0])
     list3.insert(0,scores[1])
     #-----------------------------------------------------------------------------------------
@@ -142,7 +144,7 @@ def MatchDetailData(url):
 
     home_team_name = home_team_long_span.text
 
-    print(home_team_name)
+    #print(home_team_name)
     list1.insert(0,home_team_name)
 
     away_team_div = soup.find('div', {'class': 'team away'})
@@ -150,7 +152,7 @@ def MatchDetailData(url):
 
     away_team_name = away_team_long_span.text
 
-    print(away_team_name)
+    #print(away_team_name)
     list3.insert(0,away_team_name)
 
     #-----------------------------------------------------------------------------------------
