@@ -42,7 +42,7 @@ def GetCategory():
     driver.get("https://www.premierleague.com/match/5937")
     # Đợi cho element của cookie xuất hiện và click vào nút accept
     try:
-        accept_button = WebDriverWait(driver, 5).until(
+        accept_button = WebDriverWait(driver, 2).until(
             EC.element_to_be_clickable((By.XPATH, '//button[@id="onetrust-accept-btn-handler"]'))
         )
         accept_button.click()
@@ -96,7 +96,7 @@ def MatchDetailData(url):
 
     # Đợi cho element của cookie xuất hiện và click vào nút accept
     try:
-        accept_button = WebDriverWait(driver, 5).until(
+        accept_button = WebDriverWait(driver, 2).until(
             EC.element_to_be_clickable((By.XPATH, '//button[@id="onetrust-accept-btn-handler"]'))
         )
         accept_button.click()
