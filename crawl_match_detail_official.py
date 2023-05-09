@@ -50,7 +50,7 @@ def GetCategory():
         # Nếu không tìm thấy element của cookie hoặc không thể click được, bỏ qua
         pass
 
-    time.sleep(1)
+    time.sleep(2)
     li_element = driver.find_element(By.CSS_SELECTOR, "li[data-tab-index='2']")
     li_element.click()
 
@@ -84,18 +84,26 @@ def GetCategory():
 
 #----------------------------------------------------------------------------------------------
 
-GetCategory()
+#GetCategory()
 
 #----------------------------------------------------------------------------------------------
 
-def MatchDetailData(url):
-    # Tìm element và bấm
-    driver = webdriver.Chrome()
-    # Đặt kích thước của cửa sổ trình duyệt
-    driver.set_window_size(400, 300)
+# Tìm element và bấm
+driver = webdriver.Chrome()
+# Đặt kích thước của cửa sổ trình duyệt
+driver.set_window_size(400, 300)
 
-    # Đặt vị trí của cửa sổ trình duyệt
-    driver.set_window_position(0, 0)
+# Đặt vị trí của cửa sổ trình duyệt
+driver.set_window_position(0, 0)
+
+def MatchDetailData(url):
+    # # Tìm element và bấm
+    # driver = webdriver.Chrome()
+    # # Đặt kích thước của cửa sổ trình duyệt
+    # driver.set_window_size(400, 300)
+    #
+    # # Đặt vị trí của cửa sổ trình duyệt
+    # driver.set_window_position(0, 0)
     driver.get(url)
 
     # Đợi cho element của cookie xuất hiện và click vào nút accept
@@ -108,7 +116,7 @@ def MatchDetailData(url):
         # Nếu không tìm thấy element của cookie hoặc không thể click được, bỏ qua
         pass
 
-    time.sleep(1)
+    time.sleep(2)
     li_element = driver.find_element(By.CSS_SELECTOR,"li[data-tab-index='2']")
     li_element.click()
 
@@ -168,26 +176,44 @@ def MatchDetailData(url):
 
     print(result)
     # Đóng trình duyệt
-    driver.quit()
 
     return result
 
 for filename in txt_files:
     Seasondata = []
     for url in Get_urlmatch_list(filename):
-        Seasondata.append(MatchDetailData(url))
+        try:
+            matchdata = MatchDetailData(url)
+        except:
+            continue
+        if(len(matchdata) == 26):
+            Seasondata.append(matchdata)
+            print(len(matchdata))
 
     # Tạo thư mục nếu chưa tồn tại
     dir_name = 'final_result_data_official'
     if not os.path.exists(dir_name):
         os.mkdir(dir_name)
 
-    # Tạo DataFrame từ list và lưu vào file excel
-    df = pd.DataFrame(Seasondata, columns=GetCategory())
-    df['Score Home'] = pd.to_numeric(df['Score Home'], errors='coerce')
-    df['Score Away'] = pd.to_numeric(df['Score Away'], errors='coerce')
-    file_name_xml = filename + '.xlsx'  # Tên file được lấy từ url ban đầu
-    file_path = os.path.join(dir_name, file_name_xml)
-    df.to_excel(file_path, index=False)
+    try:
+        # Tạo DataFrame từ list và lưu vào file excel
+        df = pd.DataFrame(Seasondata, columns=GetCategory())
+        df['Score Home'] = pd.to_numeric(df['Score Home'], errors='coerce')
+        df['Score Away'] = pd.to_numeric(df['Score Away'], errors='coerce')
+        newfilename = filename.split('.')[0]
+        file_name_xml = newfilename + '.xlsx'  # Tên file được lấy từ url ban đầu
+        file_path = os.path.join(dir_name, file_name_xml)
+        df.to_excel(file_path, index=False)
 
+        folder_path = 'url_match_data_official'
+        file_path = os.path.join(folder_path, filename + '.txt')
 
+        if os.path.exists(file_path):
+            os.remove(file_path)
+            print("File removed successfully. File remove:" + file_path)
+        else:
+            print("File not found.")
+    except:
+        continue
+
+driver.quit()

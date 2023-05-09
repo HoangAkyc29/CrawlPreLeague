@@ -108,7 +108,7 @@ for theseason in season_list:
         os.makedirs('url_match_data_official')
 
     # Tạo đường dẫn đầy đủ của file
-    file_path = os.path.join('url_match_data_official', new_season_string)
+    file_path = os.path.join('url_match_data_official', new_season_string +'.txt')
 
     # ---------------------------------------------------------------------------------------
     # Lưu danh sách ID vào file trong thư mục url_match_data
