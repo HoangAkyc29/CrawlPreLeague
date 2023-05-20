@@ -12,23 +12,6 @@ import re
 import pandas as pd
 import requests
 
-#đoạn code này sẽ thực hiện đọc tất cả url có trong các file txt trong thư mục url_match_data_official
-#mỗi url dẫn tới 1 trang có chứa các thông số và kết quả chi tiết của 1 trận đấu, crawl lần lượt từng trận bằng selenium
-
-
-chrome_options = Options()
-chrome_options.add_argument('--headless')
-
-result_dir = 'url_match_data_official'
-
-# Lấy danh sách tên file trong thư mục 'url_match_data'
-file_list = os.listdir(result_dir)
-
-# Lọc ra danh sách các file có đuôi là .txt
-txt_files = [f for f in file_list]
-
-print(txt_files)
-
 #----------------------------------------------------------------------------------------------
 def Get_urlmatch_list(string_filename_txt):
     # Xác định đường dẫn tới file txt
@@ -183,41 +166,43 @@ def MatchDetailData(url):
 
     return result
 
-for filename in txt_files:
-    Seasondata = []
-    for url in Get_urlmatch_list(filename):
-        try:
-            matchdata = MatchDetailData(url)
-        except:
-            continue
-        if(len(matchdata) == 26):
-            Seasondata.append(matchdata)
-            print(len(matchdata))
-
-    # Tạo thư mục nếu chưa tồn tại
-    dir_name = 'final_result_data_official'
-    if not os.path.exists(dir_name):
-        os.mkdir(dir_name)
-
+filename = "2022 to 23.txt"
+Seasondata = []
+for url in Get_urlmatch_list(filename):
     try:
-        # Tạo DataFrame từ list và lưu vào file excel
-        df = pd.DataFrame(Seasondata, columns=GetCategory())
-        df['Score Home'] = pd.to_numeric(df['Score Home'], errors='coerce')
-        df['Score Away'] = pd.to_numeric(df['Score Away'], errors='coerce')
-        newfilename = filename.split('.')[0]
-        file_name_xml = newfilename + '.xlsx'  # Tên file được lấy từ url ban đầu
-        file_path = os.path.join(dir_name, file_name_xml)
-        df.to_excel(file_path, index=False)
-
-        folder_path = 'url_match_data_official'
-        file_path = os.path.join(folder_path, filename + '.txt')
-
-        if os.path.exists(file_path):
-            os.remove(file_path)
-            print("File removed successfully. File remove:" + file_path)
-        else:
-            print("File not found.")
+        matchdata = MatchDetailData(url)
     except:
         continue
+    print(len(matchdata))
+    if(len(matchdata) == 26):
+        Seasondata.append(matchdata)
+    if(len(Seasondata) == 10):
+        break
+
+# Tạo thư mục nếu chưa tồn tại
+dir_name = '10_match_crawl_official'
+if not os.path.exists(dir_name):
+    os.mkdir(dir_name)
+
+try:
+    # Tạo DataFrame từ list và lưu vào file excel
+    df = pd.DataFrame(Seasondata, columns=GetCategory())
+    df['Score Home'] = pd.to_numeric(df['Score Home'], errors='coerce')
+    df['Score Away'] = pd.to_numeric(df['Score Away'], errors='coerce')
+    newfilename = filename.split('.')[0]
+    file_name_xml = newfilename + '.xlsx'  # Tên file được lấy từ url ban đầu
+    file_path = os.path.join(dir_name, file_name_xml)
+    df.to_excel(file_path, index=False)
+
+    # folder_path = 'url_match_data_official'
+    # file_path = os.path.join(folder_path, filename + '.txt')
+    #
+    # if os.path.exists(file_path):
+    #     os.remove(file_path)
+    #     print("File removed successfully. File remove:" + file_path)
+    # else:
+    #     print("File not found.")
+except:
+    pass
 
 driver.quit()

@@ -14,6 +14,10 @@ import requests
 chrome_options = Options()
 chrome_options.add_argument('--headless')
 
+#đây là đoạn code lấy ra url của các trận đấu bóng đá từ trang https://www.premierleague.com/results từ mùa giải 2006 - 2023
+
+
+#hàm lấy ra url của các trận đấu bóng đá trong 1 mùa giải xác định
 def Geturlmatchperseason(season) :
     # Khởi tạo trình duyệt và mở trang web
     driver = webdriver.Chrome()
@@ -101,6 +105,7 @@ print(season_list)
 
 for theseason in season_list:
     url_match_data = Geturlmatchperseason(theseason)
+    #url_match_data là danh sách url của tất cả trận đấu trong mùa giải 'theseason'
     new_season_string = theseason.replace("/", " to ")
 
     # Tạo thư mục nếu chưa tồn tại
@@ -117,6 +122,8 @@ for theseason in season_list:
     if os.path.exists(file_path):
         os.remove(file_path)
 
+    #lưu url_match_data vào file txt trong url_match_data_official
+    
     with open(file_path, 'w') as f:
         for element in url_match_data:
             f.write(element + '\n')
